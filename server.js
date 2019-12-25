@@ -120,7 +120,7 @@ passport.use('local-login', new LocalStrategy({
 
 passport.use('local-signup', new LocalStrategy({
     usernameField: 'id',
-    passwordField: ' password',
+    passwordField: 'password',
     passReqToCallback:true
 }, function(req, id, password, done){
     var paramName = req.body.name || req.query.name;
@@ -143,7 +143,7 @@ passport.use('local-signup', new LocalStrategy({
                     console.log('데이터 베이스에 저장 시 에러.');
                     return done(null, false, req.flash('signupMessage', '사용자 정보 저장 시 에러가 발생했습니다.'));
                 }
-                console.log('사용자 데이터 자장할');
+                console.log('사용자 데이터 저장할');
                 return done(null, user);
             });
         }
@@ -187,13 +187,13 @@ router.route('/login').post(passport.authenticate('local-login',{
     failureFlash:true
 }));
 
-router.route('/signup', function(req, res){
+router.route('/signup').get(function(req, res){
     console.log('/signup 패스로 GET 요청됨.');
     res.render('signup.ejs', {message:req.flash('signupMessage')});
 });
 
 router.route('/signup').post(passport.authenticate('local-signup',{
-    successRedirect: '/profile',
+    successRedirect: '/login',
     failureRedirect: '/signup',
     failureFlash:true
 }));

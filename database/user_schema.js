@@ -22,6 +22,10 @@ Schema.createSchema = function(mongoose){
     }, 'id의 칼럼의 값이 없습니다.');   //id가 없는 경우
 
 
+    UserSchema.path('hash_password').validate(function(hash_password){
+        return hash_password.length;           //function(hash_password)로 password가 있는 경우
+    }, 'hashed_password의 칼럼의 값이 없습니다.');   //id가 없는 경우
+
     UserSchema
         .virtual('password')
         .set(function(password){
