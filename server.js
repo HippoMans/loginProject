@@ -175,7 +175,7 @@ router.route('/').get(function(req, res){
     console.log('/패스로 요청됨.');
     res.render('index.ejs');
 });
-
+//화면을 보려면 get이 필수
 router.route('/login').get(function(req, res){
     console.log('/login 패스로 GET 요청됨.');
     res.render('login.ejs', {message:req.flash('loginMessage')});
@@ -186,7 +186,7 @@ router.route('/login').post(passport.authenticate('local-login',{
     failureRedirect: '/login',
     failureFlash:true
 }));
-
+//화면을 보려면 get이 필수
 router.route('/signup').get(function(req, res){
     console.log('/signup 패스로 GET 요청됨.');
     res.render('signup.ejs', {message:req.flash('signupMessage')});
