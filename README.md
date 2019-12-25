@@ -1,5 +1,4 @@
 # loginProject
-
 config파일 아래 config.js을 만들어서 사용하여야 합니다.
 
 module.exports={
