@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, height=device-height ,initial-scale=1" />
         <title>회원가입 화면</title>
-
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <link rel = "stylesheet"
         href="//netdna.bootstrapcdn.com//bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel = "stylesheet"
@@ -20,22 +20,22 @@
                 <% if(message.length >0){ %>
                     <div class="alert alert-danger"><%= message %></div>
                 <% } %>
-                    <form action="/signup" method="POST">
+                    <form id = form action="/signup" method="POST">
                         <div class = "form-group">
-                            <label>아이디</label>
-                            <input type="text" class="form-control" name="id">
+                            <label>아이디(6글자 이상 쓰세요)</label>
+                            <input type="text" class="form-control" name="id" minlength="6">
                         </div>
                         <div class="form-group">
-                            <label>비밀번호</label>
-                            <input type="password" class ="form-control" name="password">
+                            <label>비밀번호(6글자 이상 쓰세요)</label>
+                            <input type="password" class ="form-control" name="password" minlength="6" id="password">
                         </div>
                         <div class="form-group">
-                            <label>비밀번호</label>
-                            <input type="password" class ="form-control" name="password">
+                            <label>비밀번호 확인(6글자 이상 쓰세요)</label>
+                            <input type="password" class ="form-control" name="repassword" minlength="6" id="repassword">
                         </div>
                         <div class="form-group">
                             <label>별명</label>
-                            <input type="password" class ="form-control" name="name">
+                            <input type="text" class ="form-control" name="name">
                         </div>
                         <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
                     </form>
@@ -46,4 +46,20 @@
             </div>
         </div>
     </body>
+    <script type="text/javascript">
+        window.onload=function(){
+         document.getElementById('form').onsubmit=function(){
+          var password=document.getElementById('password').value;
+          var repassword=document.getElementById('repassword').value;
+          
+          if(password==repassword){
+           alert('회원가입에 성공하였습니다.');
+          }else{
+           alert('비밀번호가 틀렸습니다. 다시 입력하세요');
+            return false; 
+          }
+          
+         }
+        }
+       </script>
 </html>

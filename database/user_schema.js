@@ -7,10 +7,9 @@ Schema.createSchema = function(mongoose){
     console.log('createScheme 호출됨.');
 
     var UserSchema = mongoose.Schema({
-        id : {type:String, require:true,unique:true,'default':''},
+        id : {type:String, 'default':''},
         hash_password : {type:String, require:true, 'default':''},
         salt:{type:String, required:true},
-        email:{type:String, 'default':''},
         name:{type:String, index:'hashed', default:''},
         create_at:{type:Date, index:{unique:false}, 'default':Date.now()},
         updated_at:{type:Date, index:{unique:false}, 'default':Date.now()}

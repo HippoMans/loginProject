@@ -8,18 +8,12 @@ var path = require('path');
 
 //config모듈을 사용
 var config = require('./config/config');
-
 var port = config.server_port || 5000;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 //에러 핸들러 모듈 사용
 var expressErrorHandler = require('express-error-handler');
-
-//router모듈화한 객체들을 불러온다.
-var userLogin = require('./router/login');
-var userAdduser = require('./router/adduser');
-var userListusr = require('./router/listuser');
 
 
 //암호화 모듈
@@ -34,8 +28,6 @@ var flash  = require('connect-flash');
 var mongoose = require('mongoose');
 
 var database;
-var UserSchema;
-var UserModel;
 
 var app = express();
 //views라는 폴더를 만든다면 views라는 폴더가 views템플릿을 저장하는 폴더로 사용한다. 
@@ -97,58 +89,69 @@ passport.use('local-login', new LocalStrategy({
     console.log('passort의 local-login 호출됨 : '+id + ' , '+password);
 
     //DB를 참조한다.
-    var database = app.get('database');
-    database.UserModel.findOne({'id':id}, function(err, user){
-        if(err){
-            console.log('에러 발생함.');
-            return done(err);
-        }
-        if(!user){
-            console.log('사용자 id가 일치하지 않습니다.');
-            return done(null, false, req.flash('loginMessage', '등록된 계정이 없습니다.'));
-        }
-        //유저스키마 정할때 저장 모수층이다.
-        var authenticated = user.authenticate(password, user._doc.salt, user._doc.hash_password);
-        if(!authenticated){
-            console.log('비밀번호가 일치하지 않습니다.');
-            return done(null, false, req.flash('loginMessage'), '비밀번호가 일치하지 않습니다.');
-        }
-        console.log('아이디와 비밀번호가 일치합니다.')
-        return done(null, user);
+    process.nextTick(function(){
+        var database = app.get('database');
+        database.UserModel.findOne({'id':id}, function(err, user){
+            if(err){
+                console.log('에러 발생함.');
+                return done(err);
+            }
+            if(!user){
+                console.log('사용자 id가 일치하지 않습니다.');
+                return done(null, false, req.flash('loginMessage', '등록된 계정이 없습니다.'));
+            }
+            //유저스키마 정할때 저장 모수층이다.
+            var authenticated = user.authenticate(password, user._doc.salt, user._doc.hash_password);
+            if(!authenticated){
+                console.log('비밀번호가 일치하지 않습니다.');
+                return done(null, false, req.flash('loginMessage'), '비밀번호가 일치하지 않습니다.');
+            }
+            console.log('아이디와 비밀번호가 일치합니다.')
+            return done(null, user);
+            });
     });
 }));
 
 passport.use('local-signup', new LocalStrategy({
     usernameField: 'id',
     passwordField: 'password',
-    passReqToCallback:true
+    passReqToCallback: true
 }, function(req, id, password, done){
     var paramName = req.body.name || req.query.name;
+
     console.log('passport의 local-signup 호출됨 : ' + id + ' , ' + password + ' , ' + paramName);
 
-    var database = app.get('database');
-    database.UserModel.findOne({'id':id}, function(err, user){
+        process.nextTick(function(){
+        var database = app.get('database');
+        database.UserModel.findOne({'id':id}, function(err, user){
 
-        if(err){
-            console.log('애러 발생.');
-            return done(err);
-        }
-        if(user){
-            console.log('기존에 계정이 있습니다. ');
-            return done(null, false, req.flash('signupMessage','계정이 이미 있습니다.'));
-        }else{
-            var user = new database.UserModel({'id':id, 'password':password, 'name' : paramName});
-            user.save(function(err){
-                if(err){
-                    console.log('데이터 베이스에 저장 시 에러.');
-                    return done(null, false, req.flash('signupMessage', '사용자 정보 저장 시 에러가 발생했습니다.'));
-                }
-                console.log('사용자 데이터 저장할');
-                return done(null, user);
-            });
-        }
+            if(err){
+                console.log('애러 발생.');
+                return done(err);
+            }
+            if(user){
+                console.log('기존에 계정이 있습니다. ');
+                return done(null, false, req.flash('signupMessage','계정이 이미 있습니다.'));
+            }
+            else{
+                var user = new database.UserModel({
+                    'id':id, 
+                    'password':password, 
+                    'name':paramName
+                });
+                user.save(function(err){
+                    if(err){
+                        console.log('데이터 베이스에 저장 시 에러.');
+                        return done(null, false, req.flash('signupMessage', '사용자 정보 저장 시 에러가 발생했습니다.'));
+                    }
+                    console.log('사용자 데이터 저장함');
+                    return done(null, user);
+                });
+            }
+        });
     });
 }));
+
 
 passport.serializeUser(function(user, done){
     console.log('serializeUser 호출됨.');
@@ -165,10 +168,6 @@ passport.deserializeUser(function(user, done){
 
 
 var router = express.Router();
-router.route('/process/login').post(userLogin.login);
-router.route('/process/adduser').post(userAdduser.adduser);
-//모든 id를 검색
-router.route('/process/listuser').post(userListusr.listuser);
 
 //회원가입과 로그인 라우팅 함수
 router.route('/').get(function(req, res){
@@ -192,9 +191,10 @@ router.route('/signup').get(function(req, res){
     res.render('signup.ejs', {message:req.flash('signupMessage')});
 });
 
+//post까지는 잘 보내진다. 인증기관에서 문제 발견
 router.route('/signup').post(passport.authenticate('local-signup',{
     successRedirect: '/login',
-    failureRedirect: '/signup',
+    failureRedirect: '/profile',
     failureFlash:true
 }));
 
@@ -237,7 +237,7 @@ app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);
 
 
-app.listen(port, function(){
+app.listen(port ,function(){
     console.log('익스프레스 웹 서버를 실행함 : ' + port);
     //웹서버가 연결될 때 DB도 연결함
     connectDB();
