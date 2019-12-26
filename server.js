@@ -202,6 +202,12 @@ router.route('/signup').post(passport.authenticate('local-signup',{
     failureFlash:true
 }));
 
+
+router.route('/indexlogin').get(function(req, res){
+    console.log('/패스로 요청됨.');
+    res.render('indexlogin.ejs',{username:req.user.name});
+});
+
 router.route('/profile').get(function(req, res){
     console.log('/profile 패스로 GET 요청됨.');
     console.log('req.user 객체 정보');

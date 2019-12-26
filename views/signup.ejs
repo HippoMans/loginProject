@@ -265,30 +265,26 @@
                                     <br>
                                     <br>
 
-                        <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
+                        <button type="submit" class="btn btn-warning btn-lg" name = "submit_button">회원가입</button>
                     </div>
-
+                  </div>
+                  <!--// row-->
                 </div>
-                <!--// row-->
               </div>
-            </div>
-          </fieldset>
-        </form>
-    </div>
-</div>
-
-
-
-        
-    </body>
-
+            </fieldset>
+          </form>
+      </div>
+  </div>
+  </body>
     <script type="text/javascript">
         window.onload=function(){
          document.getElementById('form').onsubmit=function(){
           var password=document.getElementById('password').value;
           var repassword=document.getElementById('repassword').value;
-          
-          if(password==repassword){
+          if (!password){
+            alert("회원정보를 입력하세요.");
+            return false;
+          }else if(password==repassword){
            alert('회원가입에 성공하였습니다.');
           }else{
            alert('비밀번호가 틀렸습니다. 다시 입력하세요');
