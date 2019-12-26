@@ -5,6 +5,8 @@
 var express = require('express');
 var static = require('serve-static');
 var path = require('path');
+const ngrok = require('ngrok');
+let endpoint = '';
 
 var app = express();
 //views라는 폴더를 만든다면 views라는 폴더가 views템플릿을 저장하는 폴더로 사용한다. 
@@ -232,6 +234,56 @@ router.route('/logout').get(function(req, res){
     req.logout();
     res.redirect('/');
 });
+
+  // 인증기관 claim요청 및 doc받기
+router.route('/userauth-dids').get(async function(req, res) {
+    res.render('userauth-dids.ejs');
+    console.log('/userauth-dids');
+
+    await ngrok.disconnect();
+
+    // run the app server and tunneling service
+    ngrok.connect(8088).then(ngrokUrl => {
+      endpoint = ngrokUrl;
+      console.log(
+        `Your dApp is being served!, open at ${endpoint} and scan the QR to login!`
+      );
+    });
+  });
+
+// user to 매장
+router.route('/usersendverify').get(function(req, res) {
+    res.render('usersendverify.ejs');
+    console.log('/usersendverify');
+
+    // run the app server and tunneling service
+    ngrok.connect(8088).then(ngrokUrl => {
+      endpoint = ngrokUrl;
+      console.log(
+        `Your dApp is being served!, open at ${endpoint} and scan the QR to login!`
+      );
+    });
+  });
+
+  router.route('/store-reqverify').get(function(req, res) {
+    res.render('store-reqverify.ejs');
+    console.log('/store-reqverify');
+
+    // run the app server and tunneling service
+    ngrok.connect(8088).then(ngrokUrl => {
+      endpoint = ngrokUrl;
+      console.log(
+        `Your dApp is being served!, open at ${endpoint} and scan the QR to login!`
+      );
+    });
+  });
+
+// 매장 to user
+router.route('/login').get(function(req, res) {
+    res.render('login.ejs');
+    console.log('/login');
+  });
+
 
 app.use('/', router);
 
