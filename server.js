@@ -6,6 +6,15 @@ var express = require('express');
 var static = require('serve-static');
 var path = require('path');
 
+var app = express();
+//views라는 폴더를 만든다면 views라는 폴더가 views템플릿을 저장하는 폴더로 사용한다. 
+
+//ejs라는 뷰 템플릿 파일을 만든다.
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+//ejs에서 템플릿으로 사용하기 위해서는 반드시 주소를 받아야한다.
+app.use(express.static(__dirname+'/public'));
+
 //config모듈을 사용
 var config = require('./config/config');
 var port = config.server_port || 5000;
@@ -14,7 +23,6 @@ var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 //에러 핸들러 모듈 사용
 var expressErrorHandler = require('express-error-handler');
-
 
 //암호화 모듈
 var crypto = require('crypto');
@@ -28,13 +36,6 @@ var flash  = require('connect-flash');
 var mongoose = require('mongoose');
 
 var database;
-
-var app = express();
-//views라는 폴더를 만든다면 views라는 폴더가 views템플릿을 저장하는 폴더로 사용한다. 
-app.set('views', __dirname + '/views');
-
-//ejs라는 뷰 템플릿 파일을 만든다.
-app.set('view engine', 'ejs');
 
 app.use('/public', static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
@@ -118,8 +119,10 @@ passport.use('local-signup', new LocalStrategy({
     passReqToCallback: true
 }, function(req, id, password, done){
     var paramName = req.body.name || req.query.name;
+    var paramPhone = req.body.phone || req.query.phone;
+    var paramEmail = req.body.email || req.query.email;
 
-    console.log('passport의 local-signup 호출됨 : ' + id + ' , ' + password + ' , ' + paramName);
+    console.log('passport의 local-signup 호출됨 : ' + id + ' , ' + password + ' , ' + paramName + paramPhone + ' , ' + paramEmail);
 
         process.nextTick(function(){
         var database = app.get('database');
@@ -137,8 +140,8 @@ passport.use('local-signup', new LocalStrategy({
                 var user = new database.UserModel({
                     'id':id, 
                     'password':password, 
-                    'name':paramName
-                });
+                    'name':paramName,
+                     });
                 user.save(function(err){
                     if(err){
                         console.log('데이터 베이스에 저장 시 에러.');
@@ -181,10 +184,11 @@ router.route('/login').get(function(req, res){
 });
 //로그인 요청해서 성공하면 
 router.route('/login').post(passport.authenticate('local-login',{
-    successRedirect: '/profile',
+    successRedirect: '/indexlogin',
     failureRedirect: '/login',
     failureFlash:true
 }));
+
 //화면을 보려면 get이 필수
 router.route('/signup').get(function(req, res){
     console.log('/signup 패스로 GET 요청됨.');
@@ -193,7 +197,7 @@ router.route('/signup').get(function(req, res){
 
 //post까지는 잘 보내진다. 인증기관에서 문제 발견
 router.route('/signup').post(passport.authenticate('local-signup',{
-    successRedirect: '/login',
+    successRedirect: '/indexlogin',
     failureRedirect: '/profile',
     failureFlash:true
 }));

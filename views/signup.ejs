@@ -1,51 +1,287 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, height=device-height ,initial-scale=1" />
-        <title>회원가입 화면</title>
-        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <link rel = "stylesheet"
-        href="//netdna.bootstrapcdn.com//bootstrap/3.0.2/css/bootstrap.min.css">
-        <link rel = "stylesheet"
-        href="//netdna.bootstrapcdn.com//font-awesome/4.0.3/css/font-awesome.min.css">
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>DID_회원가입</title>
+    <style>
+      /* reset */
+      .input_wrap {
+      }
+      .i_wrap .row .i_wrap {
+        margin-bottom: 5px;
+        border: 1px solid gray;
+      }
 
-    </head>
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      ul,
+      fieldset {
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        color: dimgray;
+      }
+
+      fieldset {
+        border: 0;
+      }
+      legend {
+        font-size: 0;
+        line-height: 0;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        text-indent: -9999px;
+      }
+
+      input {
+        vertical-align: middle;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* form */
+      .input_wrap {
+      }
+      .input_wrap .col {
+        border: 1px solid gary;
+        display: table;
+        width: 100%;
+      }
+      .input_wrap .col .row {
+        background-color: whitesmoke;
+        display: table-row;
+      }
+      .input_wrap .col .row .col-tit {
+        background-color: darkgrey;
+        border: 1px solid gray;
+        display: table-cell;
+        width: 15%;
+        height: 5px;
+        vertical-align: middle;
+        padding: 10px;
+        padding: 8px 20px;
+        font-size: 12px;
+      }
+
+      .input_wrap .col .row .col-content {
+        border: 1px solid gray;
+        display: table-cell;
+        width: 85%;
+        height: 5px;
+        padding: 10px;
+        padding: 8px 20px;
+      }
+
+      .selet {
+        border: 1px solid black;
+
+        width: 100%;
+      }
+
+      .btn_phone_confirm {
+        border: 1px solid black;
+        border-radius: 3px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 10px;
+        font-weight: bold;
+        color: dimgray;
+      }
+
+      .btn_address {
+        border: 1px solid black;
+        background-color: darkgray;
+        border-radius: 5px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        vertical-align: middle;
+      }
+
+      .inpTxt {
+        border: 1px solid #d9d9d9;
+        height: 34px;
+        padding: 9px;
+        box-sizing: border-box;
+        font-size: 12px;
+        color: gray;
+      }
+
+      .btn_road_add {
+        border: 1px solid black;
+        border-radius: 3px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 10px;
+        font-weight: bold;
+        color: dimgray;
+      }
+      .btn {
+        display: inline-block;
+        padding-left: 30px;
+        padding-right: 30px;
+        height: 60px;
+        line-height: 60px;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        box-sizing: border-box;
+        border-radius: 8px;
+      }
+
+      .btn_type02 {
+        background-color: #fff;
+        border: 1px solid #d9d9d9;
+        color: #747474;
+      }
+
+      .w106 {
+        width: 106px;
+      }
+      .w106 {
+        width: 123px;
+      }
+      .w106 {
+        width: 165px;
+      }
+      .w106 {
+        width: 180px;
+      }
+    </style>
+  </head>
     <body>
-        <div class= "container">
-            <div class="col-sm-6 col-sm-offset-3">
-                <h1><span class = "fa fa-sign-in"></span>회원가입</h1>
+        <div class="content">
+            <h1 class="tit">회원가입</h1>
 
                 <!---인증 처리 후 메시지가 있으면 메시지 표시--->
                 <% if(message.length >0){ %>
                     <div class="alert alert-danger"><%= message %></div>
                 <% } %>
                     <form id = form action="/signup" method="POST">
-                        <div class = "form-group">
-                            <label>아이디(4글자 이상 쓰세요)</label>
-                            <input type="text" class="form-control" name="id" minlength="4">
+                      <fieldset>
+                        <legend>필수정보입력 입력폼</legend>
+                        <div class="con_tit">
+                          <h2></h2>
+                          <p>
+                            문자와 이메일 수신동의를 체크해 주시면 진행되는 이벤트 및 다양한
+                            쇼핑 정보를 받아보실 수 있습니다.
+                          </p>
                         </div>
-                        <div class="form-group">
-                            <label>비밀번호(6글자 이상 쓰세요)</label>
-                            <input type="password" class ="form-control" name="password" minlength="6" id="password">
-                        </div>
-                        <div class="form-group">
-                            <label>비밀번호 확인(6글자 이상 쓰세요)</label>
-                            <input type="password" class ="form-control" name="repassword" minlength="6" id="repassword">
-                        </div>
-                        <div class="form-group">
-                            <label>별명</label>
-                            <input type="text" class ="form-control" name="name">
-                        </div>
-                        <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
-                    </form>
 
-                    <hr>
-                    <p>이미 계정이 있으신가요? <a href="/login">로그인하기</a></p>
-                <p><a href="/">홈으로</a>.</p>
+                      <div class="input_wrap">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col-tit">아이디(4글자 이상 쓰세요)</div>
+                            <div class="col-content">
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="영문,숫자조합 4~12자"
+                                name="id"
+                                minlength="4"
+                              />
+                            </div>
+                          </div>
+            
+
+                          <div class="row">
+                            <div class="col-tit">비밀번호(6글자 이상 쓰세요)</div>
+                            <div class="col-content">
+                              <input
+                                type="password"
+                                class="inpTxt"
+                                placeholder="영문,숫자조합 4~12자"
+                                name="password"
+                                minlength="6" 
+                                id="password"
+                              />
+                            </div>
+                          </div>
+
+
+                          <div class="row">
+                            <div class="col-tit">비밀번호 확인(6글자 이상 쓰세요)</div>
+                            <div class="col-content">
+                              <input
+                                type="password"
+                                class="inpTxt w180"
+                                placeholder="비밀번호 재입력"
+                                name="repassword" 
+                                minlength="6" 
+                                id="repassword"
+                              />
+                            </div>
+                          </div>
+                          </div>
+
+                          <div class="input_wrap">
+                            <div class="col">
+                              <div class="row">
+                                <div class="col-tit">이름</div>
+                                <div class="col-content">
+                                  <input
+                                    type="text"
+                                    id="UserName"
+                                    name="name"
+                                    class="inpTxt w180"
+                                    placeholder="이름입력"
+                                  />
+                                </div>
+                              </div>
+                            </fieldset>
+
+                        <fieldset>
+                            <legend>선택정보입력 입력폼</legend>
+                            <h3>선택정보입력</h3>
+                            <div class="input_wrap">
+                              <div class="col">
+                                <div class="row">
+                                  <div class="col-tit">인증</div>
+                                  <div class="col-content">
+                                  
+                                    <label for="여자">인증되었을시,아이디,비번만 저장되고 다른정보는 삭제합니다.</label>
+                                   
+                                    <input type="checkbox" />개인정보처리방침 동의
+                                    <br>
+                                    <br>
+
+                        <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
+                    </div>
+
+                </div>
+                <!--// row-->
+              </div>
             </div>
-        </div>
+          </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+        
     </body>
+
     <script type="text/javascript">
         window.onload=function(){
          document.getElementById('form').onsubmit=function(){
