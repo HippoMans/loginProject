@@ -265,24 +265,24 @@ router.route('/usersendverify').get(function(req, res) {
     });
   });
 
-  router.route('/store-reqverify').get(function(req, res) {
-    res.render('store-reqverify.ejs');
-    console.log('/store-reqverify');
+//   router.route('/store-reqverify').get(function(req, res) {
+//     res.render('store-reqverify.ejs');
+//     console.log('/store-reqverify');
 
-    // run the app server and tunneling service
-    ngrok.connect(8088).then(ngrokUrl => {
-      endpoint = ngrokUrl;
-      console.log(
-        `Your dApp is being served!, open at ${endpoint} and scan the QR to login!`
-      );
-    });
-  });
+//     // run the app server and tunneling service
+//     ngrok.connect(8088).then(ngrokUrl => {
+//       endpoint = ngrokUrl;
+//       console.log(
+//         `Your dApp is being served!, open at ${endpoint} and scan the QR to login!`
+//       );
+//     });
+//   });
 
-// 매장 to user
-router.route('/login').get(function(req, res) {
-    res.render('login.ejs');
-    console.log('/login');
-  });
+// // 매장 to user
+// router.route('/login').get(function(req, res) {
+//     res.render('login.ejs');
+//     console.log('/login');
+//   });
 
 
 app.use('/', router);
